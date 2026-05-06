@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Review &amp; Export Final Video</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13b6ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101d22",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-white antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden border-x border-white/5 shadow-2xl">
+<!-- TopAppBar -->
+<header class="flex items-center bg-background-dark p-4 pb-2 justify-between sticky top-0 z-50">
+<div aria-label="Go Back" class="text-white flex size-12 shrink-0 items-center cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center font-display">Review Your Masterpiece</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
+<span class="material-symbols-outlined text-2xl">more_horiz</span>
+</button>
+</div>
+</header>
+<!-- MediaPlayer -->
+<section class="p-4 pt-2">
+<div class="relative flex flex-col items-center justify-center bg-[#13b6ec]/10 aspect-[9/16] rounded-xl overflow-hidden shadow-2xl group border border-white/10">
+<!-- Background Image Placeholder -->
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Cinematic drone shot of turquoise ocean waves crashing on black sand" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWAuRfy3cJSdDU_wvtad1TjSQ56MzNz1INgHjkbgR8Dow_XYVbH7w8c4_d2xU7HSpTaABpHGTSnLOtUiasujCSFHQNeNEH4ZaNkf57GcbGplu0W36ZOX1R3KsVf9CN_WAraAB7N6nL95dJXNwhN8HxJjDgkw6sleVez4Oav6VXX9cyy3MD3pmx8KXcxLu4pR1QAyxScb6BXQt4LqY1Y2fI5Z9JWKQwtvGqJlvAKEY5shRyHdZHQaiPBtVvrNURyeBNqQvb_il9-UI");'>
+</div>
+<!-- Overlay Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+<!-- Play Button -->
+<button class="relative flex shrink-0 items-center justify-center rounded-full size-20 bg-primary/90 text-white shadow-lg backdrop-blur-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined !text-4xl translate-x-0.5" style="font-variation-settings: 'FILL' 1">play_arrow</span>
+</button>
+<!-- Video Controls -->
+<div class="absolute inset-x-0 bottom-0 px-6 py-6">
+<div class="flex h-6 items-center justify-center mb-2">
+<div class="h-1.5 flex-1 rounded-full bg-white/30 overflow-hidden">
+<div class="h-full bg-primary w-1/3 rounded-full"></div>
+</div>
+<div class="relative -ml-[66%]">
+<div class="size-4 rounded-full bg-white shadow-md border-2 border-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<p class="text-white text-sm font-medium leading-normal tracking-wider font-display">0:12</p>
+<p class="text-white/60 text-sm font-medium leading-normal tracking-wider font-display">0:30</p>
+</div>
+</div>
+<!-- Resolution Badge -->
+<div class="absolute top-4 right-4 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5">
+<span class="size-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-bold text-white tracking-tighter">4K HDR</span>
+</div>
+</div>
+</section>
+<!-- Segmented Control for Resolution -->
+<section class="px-4 py-2">
+<div class="flex h-12 items-center justify-center rounded-xl bg-white/5 p-1 border border-white/10">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold font-display leading-normal">
+<span class="truncate">1080p</span>
+<input class="hidden" name="res-toggle" type="radio" value="1080p"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold font-display leading-normal">
+<div class="flex items-center gap-1.5">
+<span class="truncate">4K PRO</span>
+<span class="material-symbols-outlined !text-sm">auto_awesome</span>
+</div>
+<input checked="" class="hidden" name="res-toggle" type="radio" value="4k"/>
+</label>
+</div>
+</section>
+<!-- ActionsBar (Quick Edit) -->
+<section class="@container py-4">
+<h3 class="px-6 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-3">Quick Finish</h3>
+<div class="px-4 grid grid-cols-4 gap-2">
+<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
+<div class="rounded-full bg-primary/20 p-2.5 text-primary">
+<span class="material-symbols-outlined">title</span>
+</div>
+<p class="text-white text-[11px] font-bold uppercase tracking-wider">Titles</p>
+</div>
+<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
+<div class="rounded-full bg-primary/20 p-2.5 text-primary">
+<span class="material-symbols-outlined">music_note</span>
+</div>
+<p class="text-white text-[11px] font-bold uppercase tracking-wider">Audio</p>
+</div>
+<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
+<div class="rounded-full bg-primary/20 p-2.5 text-primary">
+<span class="material-symbols-outlined">auto_fix_high</span>
+</div>
+<p class="text-white text-[11px] font-bold uppercase tracking-wider">Style</p>
+</div>
+<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
+<div class="rounded-full bg-primary/20 p-2.5 text-primary">
+<span class="material-symbols-outlined">aspect_ratio</span>
+</div>
+<p class="text-white text-[11px] font-bold uppercase tracking-wider">Format</p>
+</div>
+</div>
+</section>
+<!-- Timeline -->
+<section class="flex flex-col px-4 pb-32">
+<h3 class="px-2 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-4">Edit Sequence</h3>
+<div class="grid grid-cols-[40px_1fr] gap-x-3 px-2">
+<!-- Clip 1 -->
+<div class="flex flex-col items-center gap-1 pt-1">
+<div class="bg-primary shadow-[0_0_12px_rgba(19,182,236,0.4)] aspect-square bg-cover rounded-full size-7 flex items-center justify-center border-2 border-primary/20 overflow-hidden">
+<div class="w-full h-full bg-center bg-cover" data-alt="Ocean clip thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZYPgDi0mvICo-8bC-VenRHq3_Plm4ydiSkDJ1rMiLz2OmPsiRS4H2YzX2X55vGBqL2EbD3R9QJIkr8iJauKSOxRArvbfUwhYsHnV7A_6ZggCyi_3DA7C6V-jRH-2VtNVsVGmRm9t1CmtyxmRwD1vx8LXkj0NcrRdkH_QshADaOjc84DoU237kjIIL9LCsoC98P-ESceA3NAG0aCnuX0wLvPtoaohFVKcMGGmVF8ty50Dt7un-Zh81hNwkz619IyxXXBAjvfOh5zA')"></div>
+</div>
+<div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
+</div>
+<div class="flex flex-1 flex-col pb-6">
+<p class="text-white text-base font-bold leading-tight font-display">Cinematic Intro</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-primary text-xs font-bold bg-primary/10 px-2 py-0.5 rounded border border-primary/20">0:00 - 0:08</span>
+<span class="text-white/40 text-xs font-medium italic">Fades in</span>
+</div>
+</div>
+<!-- Clip 2 -->
+<div class="flex flex-col items-center gap-1">
+<div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
+<div class="bg-white/10 aspect-square rounded-full size-7 flex items-center justify-center border border-white/20">
+<span class="material-symbols-outlined !text-sm text-primary">text_fields</span>
+</div>
+<div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
+</div>
+<div class="flex flex-1 flex-col pb-6">
+<p class="text-white text-base font-bold leading-tight font-display">Title Overlay</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:04 - 0:12</span>
+<span class="text-white/40 text-xs font-medium">"Tropical Escape"</span>
+</div>
+</div>
+<!-- Clip 3 -->
+<div class="flex flex-col items-center gap-1 pb-1">
+<div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
+<div class="bg-white/10 aspect-square bg-cover rounded-full size-7 flex items-center justify-center border border-white/20 overflow-hidden">
+<div class="w-full h-full bg-center bg-cover opacity-50" data-alt="Beach clip thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDF1mHbi095_g6mT30TcSVpcDG6Si0gd0QjsDQUdpngJc3E5dhpLP-SRfLABOEepc0cyHw_T2rXMpNUKdd6GMc6JvxCRNi0jCr488N_19qc7DI0Lq4BLl0V79-rpVhzeVXGzpVtNwdHs0jwDu21oy9WbLojmpi9hPMmzexNFf_odmBDA9umEpZZWxvltHvmR0RMq_gGltgfIYw00yQFNhUXRQoOvw-NJbTYQTb4CWHL5l92Lz7UDfZkpHRJCPYLATEulKVHRUPKZCs')"></div>
+</div>
+</div>
+<div class="flex flex-1 flex-col">
+<p class="text-white text-base font-bold leading-tight font-display">Action Sequence</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:12 - 0:30</span>
+<span class="text-white/40 text-xs font-medium">Slow Motion</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Fixed Footer Export Button -->
+<footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-background-dark/80 backdrop-blur-xl border-t border-white/5 z-[60]">
+<div class="flex flex-col gap-3">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(19,182,236,0.4)] flex items-center justify-center gap-3 transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">download</span>
+<span class="text-base tracking-tight font-display">Export 4K (No Watermark)</span>
+</button>
+<div class="flex items-center justify-center gap-4 py-1">
+<p class="text-white/40 text-[10px] uppercase font-bold tracking-[0.15em]">Quick Share To</p>
+<div class="flex gap-4 opacity-60">
+<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">play_circle</span>
+<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">ios_share</span>
+<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">movie_filter</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- IOS Home Indicator Padding -->
+<div class="h-8 bg-background-dark"></div>
+</div>
+</body></html>
