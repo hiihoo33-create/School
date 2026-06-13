@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Review &amp; Export Final Video</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
+<html class="dark" lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>مراجعة وتصدير الفيديو النهائي</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
             theme: {
@@ -19,191 +19,438 @@
                         "background-dark": "#101d22",
                     },
                     fontFamily: {
-                        "display": ["Space Grotesk"]
+                        "display": ["Space Grotesk"],
+                        "arabic": ["Cairo"]
                     },
                     borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
                 },
             },
         }
     </script>
-<style>
+    <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
         body {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'Cairo', 'Space Grotesk', sans-serif;
         }
         .custom-scrollbar::-webkit-scrollbar {
             display: none;
         }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(19, 182, 236, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
-<style>
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
-  </head>
+</head>
 <body class="bg-background-light dark:bg-background-dark text-white antialiased">
 <div class="relative flex min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden border-x border-white/5 shadow-2xl">
-<!-- TopAppBar -->
-<header class="flex items-center bg-background-dark p-4 pb-2 justify-between sticky top-0 z-50">
-<div aria-label="Go Back" class="text-white flex size-12 shrink-0 items-center cursor-pointer">
-<span class="material-symbols-outlined text-2xl">arrow_back</span>
+    <!-- TopAppBar -->
+    <header class="flex items-center bg-background-dark p-4 pb-2 justify-between sticky top-0 z-50">
+        <button id="backBtn" aria-label="العودة للخلف" class="text-white flex size-12 shrink-0 items-center cursor-pointer hover:bg-white/10 rounded-lg transition-colors" role="button">
+            <span class="material-symbols-outlined text-2xl">arrow_back</span>
+        </button>
+        <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center font-display">مراجعة تحفتك</h2>
+        <button aria-label="خيارات إضافية" class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
+            <span class="material-symbols-outlined text-2xl">more_horiz</span>
+        </button>
+    </header>
+
+    <!-- MediaPlayer -->
+    <section class="p-4 pt-2">
+        <div class="relative flex flex-col items-center justify-center bg-[#13b6ec]/10 aspect-[9/16] rounded-xl overflow-hidden shadow-2xl group border border-white/10">
+            <!-- Background Image -->
+            <div id="videoBackground" class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=710&fit=crop')"></div>
+            <!-- Overlay Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+            <!-- Play Button -->
+            <button id="playBtn" aria-label="تشغيل الفيديو" class="relative flex shrink-0 items-center justify-center rounded-full size-20 bg-primary/90 text-white shadow-lg backdrop-blur-sm transition-transform hover:bg-primary active:scale-95 z-10">
+                <span id="playIcon" class="material-symbols-outlined !text-4xl translate-x-0.5" style="font-variation-settings: 'FILL' 1">play_arrow</span>
+            </button>
+            <!-- Video Controls -->
+            <div class="absolute inset-x-0 bottom-0 px-6 py-6 z-10">
+                <div class="flex h-6 items-center justify-center mb-2">
+                    <div class="h-1.5 flex-1 rounded-full bg-white/30 overflow-hidden cursor-pointer" id="progressBar" role="slider" aria-label="شريط التقدم">
+                        <div id="progressFill" class="h-full bg-primary w-1/3 rounded-full transition-all"></div>
+                    </div>
+                    <div class="relative -ml-[66%]">
+                        <div class="size-4 rounded-full bg-white shadow-md border-2 border-primary"></div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <p id="currentTime" class="text-white text-sm font-medium leading-normal tracking-wider font-display">0:12</p>
+                    <p id="totalTime" class="text-white/60 text-sm font-medium leading-normal tracking-wider font-display">0:30</p>
+                </div>
+            </div>
+            <!-- Resolution Badge -->
+            <div class="absolute top-4 right-4 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5 z-10">
+                <span class="size-2 rounded-full bg-primary pulse-animation"></span>
+                <span id="resolutionBadge" class="text-xs font-bold text-white tracking-tighter">4K HDR</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Segmented Control for Resolution -->
+    <section class="px-4 py-2">
+        <fieldset class="flex h-12 items-center justify-center rounded-xl bg-white/5 p-1 border border-white/10">
+            <legend class="sr-only">اختر الدقة</legend>
+            <label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold hover:text-white/70" aria-label="1080p">
+                <span class="truncate">1080p</span>
+                <input class="hidden" name="res-toggle" type="radio" value="1080p" data-label="1080p"/>
+            </label>
+            <label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold hover:text-white/70" aria-label="4K PRO">
+                <div class="flex items-center gap-1.5">
+                    <span class="truncate">4K PRO</span>
+                    <span class="material-symbols-outlined !text-sm">auto_awesome</span>
+                </div>
+                <input checked class="hidden" name="res-toggle" type="radio" value="4k" data-label="4K HDR"/>
+            </label>
+        </fieldset>
+    </section>
+
+    <!-- ActionsBar (Quick Edit) -->
+    <section class="@container py-4">
+        <h3 class="px-6 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-3">الإنهاء السريع</h3>
+        <div class="px-4 grid grid-cols-4 gap-2">
+            <button class="quick-edit-btn flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer hover:bg-white/10" data-feature="titles" aria-label="إضافة نصوص">
+                <div class="rounded-full bg-primary/20 p-2.5 text-primary">
+                    <span class="material-symbols-outlined">title</span>
+                </div>
+                <p class="text-white text-[11px] font-bold uppercase tracking-wider">نصوص</p>
+            </button>
+            <button class="quick-edit-btn flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer hover:bg-white/10" data-feature="audio" aria-label="تعديل الصوت">
+                <div class="rounded-full bg-primary/20 p-2.5 text-primary">
+                    <span class="material-symbols-outlined">music_note</span>
+                </div>
+                <p class="text-white text-[11px] font-bold uppercase tracking-wider">صوت</p>
+            </button>
+            <button class="quick-edit-btn flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer hover:bg-white/10" data-feature="style" aria-label="تطبيق أسلوب">
+                <div class="rounded-full bg-primary/20 p-2.5 text-primary">
+                    <span class="material-symbols-outlined">auto_fix_high</span>
+                </div>
+                <p class="text-white text-[11px] font-bold uppercase tracking-wider">أسلوب</p>
+            </button>
+            <button class="quick-edit-btn flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer hover:bg-white/10" data-feature="format" aria-label="تغيير الصيغة">
+                <div class="rounded-full bg-primary/20 p-2.5 text-primary">
+                    <span class="material-symbols-outlined">aspect_ratio</span>
+                </div>
+                <p class="text-white text-[11px] font-bold uppercase tracking-wider">صيغة</p>
+            </button>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="flex flex-col px-4 pb-32">
+        <h3 class="px-2 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-4">تسلسل التحرير</h3>
+        <div class="grid grid-cols-[40px_1fr] gap-x-3 px-2">
+            <!-- Clip 1 -->
+            <div class="flex flex-col items-center gap-1 pt-1">
+                <div class="bg-primary shadow-[0_0_12px_rgba(19,182,236,0.4)] aspect-square bg-cover rounded-full size-7 flex items-center justify-center border-2 border-primary/20 overflow-hidden cursor-pointer hover:scale-110 transition-transform" role="button" tabindex="0" aria-label="مقطع سينمائي بمدة 8 ثواني">
+                    <div class="w-full h-full bg-center bg-cover" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop')"></div>
+                </div>
+                <div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
+            </div>
+            <div class="flex flex-1 flex-col pb-6">
+                <p class="text-white text-base font-bold leading-tight font-display">مقدمة سينمائية</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-primary text-xs font-bold bg-primary/10 px-2 py-0.5 rounded border border-primary/20">0:00 - 0:08</span>
+                    <span class="text-white/40 text-xs font-medium italic">يتلاشى داخل</span>
+                </div>
+            </div>
+
+            <!-- Clip 2 -->
+            <div class="flex flex-col items-center gap-1">
+                <div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
+                <div class="bg-white/10 aspect-square rounded-full size-7 flex items-center justify-center border border-white/20 cursor-pointer hover:bg-white/20 transition-colors" role="button" tabindex="0" aria-label="تراكب النص">
+                    <span class="material-symbols-outlined !text-sm text-primary">text_fields</span>
+                </div>
+                <div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
+            </div>
+            <div class="flex flex-1 flex-col pb-6">
+                <p class="text-white text-base font-bold leading-tight font-display">تراكب النص</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:04 - 0:12</span>
+                    <span class="text-white/40 text-xs font-medium">"هروب استوائي"</span>
+                </div>
+            </div>
+
+            <!-- Clip 3 -->
+            <div class="flex flex-col items-center gap-1 pb-1">
+                <div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
+                <div class="bg-white/10 aspect-square bg-cover rounded-full size-7 flex items-center justify-center border border-white/20 overflow-hidden cursor-pointer hover:scale-110 transition-transform" role="button" tabindex="0" aria-label="مقطع حركة بطيء الحركة">
+                    <div class="w-full h-full bg-center bg-cover opacity-50" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=60&h=60&fit=crop')"></div>
+                </div>
+            </div>
+            <div class="flex flex-1 flex-col">
+                <p class="text-white text-base font-bold leading-tight font-display">تسلسل الحركة</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:12 - 0:30</span>
+                    <span class="text-white/40 text-xs font-medium">حركة بطيئة</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fixed Footer Export Button -->
+    <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-background-dark/80 backdrop-blur-xl border-t border-white/5 z-[60]">
+        <div class="flex flex-col gap-3">
+            <button id="exportBtn" class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(19,182,236,0.4)] flex items-center justify-center gap-3 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" aria-label="تصدير الفيديو بدقة 4K بدون علامة مائية">
+                <span id="exportIcon" class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">download</span>
+                <span id="exportText" class="text-base tracking-tight font-display">تصدير 4K (بدون علامة)</span>
+            </button>
+            <div class="flex items-center justify-center gap-4 py-1">
+                <p class="text-white/40 text-[10px] uppercase font-bold tracking-[0.15em]">مشاركة سريعة</p>
+                <div class="flex gap-4 opacity-60">
+                    <button id="sharePlaystore" aria-label="مشاركة على متجر التطبيقات" class="material-symbols-outlined !text-xl cursor-pointer hover:text-white hover:opacity-100 transition-all" role="button">play_circle</button>
+                    <button id="shareNative" aria-label="مشاركة أصلية" class="material-symbols-outlined !text-xl cursor-pointer hover:text-white hover:opacity-100 transition-all" role="button">ios_share</button>
+                    <button id="shareFilter" aria-label="مشاركة مع فلتر" class="material-symbols-outlined !text-xl cursor-pointer hover:text-white hover:opacity-100 transition-all" role="button">movie_filter</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- IOS Home Indicator Padding -->
+    <div class="h-8 bg-background-dark"></div>
 </div>
-<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center font-display">Review Your Masterpiece</h2>
-<div class="flex w-12 items-center justify-end">
-<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 bg-transparent text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] min-w-0 p-0">
-<span class="material-symbols-outlined text-2xl">more_horiz</span>
-</button>
-</div>
-</header>
-<!-- MediaPlayer -->
-<section class="p-4 pt-2">
-<div class="relative flex flex-col items-center justify-center bg-[#13b6ec]/10 aspect-[9/16] rounded-xl overflow-hidden shadow-2xl group border border-white/10">
-<!-- Background Image Placeholder -->
-<div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" data-alt="Cinematic drone shot of turquoise ocean waves crashing on black sand" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCWAuRfy3cJSdDU_wvtad1TjSQ56MzNz1INgHjkbgR8Dow_XYVbH7w8c4_d2xU7HSpTaABpHGTSnLOtUiasujCSFHQNeNEH4ZaNkf57GcbGplu0W36ZOX1R3KsVf9CN_WAraAB7N6nL95dJXNwhN8HxJjDgkw6sleVez4Oav6VXX9cyy3MD3pmx8KXcxLu4pR1QAyxScb6BXQt4LqY1Y2fI5Z9JWKQwtvGqJlvAKEY5shRyHdZHQaiPBtVvrNURyeBNqQvb_il9-UI");'>
-</div>
-<!-- Overlay Gradient -->
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
-<!-- Play Button -->
-<button class="relative flex shrink-0 items-center justify-center rounded-full size-20 bg-primary/90 text-white shadow-lg backdrop-blur-sm transition-transform active:scale-95">
-<span class="material-symbols-outlined !text-4xl translate-x-0.5" style="font-variation-settings: 'FILL' 1">play_arrow</span>
-</button>
-<!-- Video Controls -->
-<div class="absolute inset-x-0 bottom-0 px-6 py-6">
-<div class="flex h-6 items-center justify-center mb-2">
-<div class="h-1.5 flex-1 rounded-full bg-white/30 overflow-hidden">
-<div class="h-full bg-primary w-1/3 rounded-full"></div>
-</div>
-<div class="relative -ml-[66%]">
-<div class="size-4 rounded-full bg-white shadow-md border-2 border-primary"></div>
-</div>
-</div>
-<div class="flex items-center justify-between">
-<p class="text-white text-sm font-medium leading-normal tracking-wider font-display">0:12</p>
-<p class="text-white/60 text-sm font-medium leading-normal tracking-wider font-display">0:30</p>
-</div>
-</div>
-<!-- Resolution Badge -->
-<div class="absolute top-4 right-4 bg-black/40 backdrop-blur-md border border-white/20 rounded-full px-3 py-1 flex items-center gap-1.5">
-<span class="size-2 rounded-full bg-primary animate-pulse"></span>
-<span class="text-xs font-bold text-white tracking-tighter">4K HDR</span>
-</div>
-</div>
-</section>
-<!-- Segmented Control for Resolution -->
-<section class="px-4 py-2">
-<div class="flex h-12 items-center justify-center rounded-xl bg-white/5 p-1 border border-white/10">
-<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold font-display leading-normal">
-<span class="truncate">1080p</span>
-<input class="hidden" name="res-toggle" type="radio" value="1080p"/>
-</label>
-<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 transition-all has-[:checked]:bg-primary has-[:checked]:text-white text-white/50 text-sm font-bold font-display leading-normal">
-<div class="flex items-center gap-1.5">
-<span class="truncate">4K PRO</span>
-<span class="material-symbols-outlined !text-sm">auto_awesome</span>
-</div>
-<input checked="" class="hidden" name="res-toggle" type="radio" value="4k"/>
-</label>
-</div>
-</section>
-<!-- ActionsBar (Quick Edit) -->
-<section class="@container py-4">
-<h3 class="px-6 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-3">Quick Finish</h3>
-<div class="px-4 grid grid-cols-4 gap-2">
-<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
-<div class="rounded-full bg-primary/20 p-2.5 text-primary">
-<span class="material-symbols-outlined">title</span>
-</div>
-<p class="text-white text-[11px] font-bold uppercase tracking-wider">Titles</p>
-</div>
-<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
-<div class="rounded-full bg-primary/20 p-2.5 text-primary">
-<span class="material-symbols-outlined">music_note</span>
-</div>
-<p class="text-white text-[11px] font-bold uppercase tracking-wider">Audio</p>
-</div>
-<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
-<div class="rounded-full bg-primary/20 p-2.5 text-primary">
-<span class="material-symbols-outlined">auto_fix_high</span>
-</div>
-<p class="text-white text-[11px] font-bold uppercase tracking-wider">Style</p>
-</div>
-<div class="flex flex-col items-center gap-2 bg-white/5 rounded-xl py-3 border border-white/5 active:bg-white/10 transition-colors cursor-pointer">
-<div class="rounded-full bg-primary/20 p-2.5 text-primary">
-<span class="material-symbols-outlined">aspect_ratio</span>
-</div>
-<p class="text-white text-[11px] font-bold uppercase tracking-wider">Format</p>
-</div>
-</div>
-</section>
-<!-- Timeline -->
-<section class="flex flex-col px-4 pb-32">
-<h3 class="px-2 text-white/60 text-xs font-bold uppercase tracking-[0.2em] mb-4">Edit Sequence</h3>
-<div class="grid grid-cols-[40px_1fr] gap-x-3 px-2">
-<!-- Clip 1 -->
-<div class="flex flex-col items-center gap-1 pt-1">
-<div class="bg-primary shadow-[0_0_12px_rgba(19,182,236,0.4)] aspect-square bg-cover rounded-full size-7 flex items-center justify-center border-2 border-primary/20 overflow-hidden">
-<div class="w-full h-full bg-center bg-cover" data-alt="Ocean clip thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZYPgDi0mvICo-8bC-VenRHq3_Plm4ydiSkDJ1rMiLz2OmPsiRS4H2YzX2X55vGBqL2EbD3R9QJIkr8iJauKSOxRArvbfUwhYsHnV7A_6ZggCyi_3DA7C6V-jRH-2VtNVsVGmRm9t1CmtyxmRwD1vx8LXkj0NcrRdkH_QshADaOjc84DoU237kjIIL9LCsoC98P-ESceA3NAG0aCnuX0wLvPtoaohFVKcMGGmVF8ty50Dt7un-Zh81hNwkz619IyxXXBAjvfOh5zA')"></div>
-</div>
-<div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
-</div>
-<div class="flex flex-1 flex-col pb-6">
-<p class="text-white text-base font-bold leading-tight font-display">Cinematic Intro</p>
-<div class="flex items-center gap-2 mt-1">
-<span class="text-primary text-xs font-bold bg-primary/10 px-2 py-0.5 rounded border border-primary/20">0:00 - 0:08</span>
-<span class="text-white/40 text-xs font-medium italic">Fades in</span>
-</div>
-</div>
-<!-- Clip 2 -->
-<div class="flex flex-col items-center gap-1">
-<div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
-<div class="bg-white/10 aspect-square rounded-full size-7 flex items-center justify-center border border-white/20">
-<span class="material-symbols-outlined !text-sm text-primary">text_fields</span>
-</div>
-<div class="w-[2px] bg-primary/30 h-8 grow rounded-full"></div>
-</div>
-<div class="flex flex-1 flex-col pb-6">
-<p class="text-white text-base font-bold leading-tight font-display">Title Overlay</p>
-<div class="flex items-center gap-2 mt-1">
-<span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:04 - 0:12</span>
-<span class="text-white/40 text-xs font-medium">"Tropical Escape"</span>
-</div>
-</div>
-<!-- Clip 3 -->
-<div class="flex flex-col items-center gap-1 pb-1">
-<div class="w-[2px] bg-primary/30 h-4 rounded-full"></div>
-<div class="bg-white/10 aspect-square bg-cover rounded-full size-7 flex items-center justify-center border border-white/20 overflow-hidden">
-<div class="w-full h-full bg-center bg-cover opacity-50" data-alt="Beach clip thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDF1mHbi095_g6mT30TcSVpcDG6Si0gd0QjsDQUdpngJc3E5dhpLP-SRfLABOEepc0cyHw_T2rXMpNUKdd6GMc6JvxCRNi0jCr488N_19qc7DI0Lq4BLl0V79-rpVhzeVXGzpVtNwdHs0jwDu21oy9WbLojmpi9hPMmzexNFf_odmBDA9umEpZZWxvltHvmR0RMq_gGltgfIYw00yQFNhUXRQoOvw-NJbTYQTb4CWHL5l92Lz7UDfZkpHRJCPYLATEulKVHRUPKZCs')"></div>
-</div>
-</div>
-<div class="flex flex-1 flex-col">
-<p class="text-white text-base font-bold leading-tight font-display">Action Sequence</p>
-<div class="flex items-center gap-2 mt-1">
-<span class="text-white/60 text-xs font-bold bg-white/5 px-2 py-0.5 rounded border border-white/10">0:12 - 0:30</span>
-<span class="text-white/40 text-xs font-medium">Slow Motion</span>
-</div>
-</div>
-</div>
-</section>
-<!-- Fixed Footer Export Button -->
-<footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-4 bg-background-dark/80 backdrop-blur-xl border-t border-white/5 z-[60]">
-<div class="flex flex-col gap-3">
-<button class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(19,182,236,0.4)] flex items-center justify-center gap-3 transition-transform active:scale-[0.98]">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">download</span>
-<span class="text-base tracking-tight font-display">Export 4K (No Watermark)</span>
-</button>
-<div class="flex items-center justify-center gap-4 py-1">
-<p class="text-white/40 text-[10px] uppercase font-bold tracking-[0.15em]">Quick Share To</p>
-<div class="flex gap-4 opacity-60">
-<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">play_circle</span>
-<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">ios_share</span>
-<span class="material-symbols-outlined !text-xl cursor-pointer hover:text-white">movie_filter</span>
-</div>
-</div>
-</div>
-</footer>
-<!-- IOS Home Indicator Padding -->
-<div class="h-8 bg-background-dark"></div>
-</div>
-</body></html>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast hidden"></div>
+
+<script>
+    // State Management
+    const state = {
+        isPlaying: false,
+        currentResolution: '4k',
+        currentTime: 12,
+        totalTime: 30,
+        isExporting: false
+    };
+
+    // Helper Functions
+    function showToast(message, duration = 3000) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.remove('hidden');
+        toast.classList.add('fade-in');
+        
+        setTimeout(() => {
+            toast.classList.add('hidden');
+        }, duration);
+    }
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateProgressBar() {
+        const progressFill = document.getElementById('progressFill');
+        const progress = (state.currentTime / state.totalTime) * 100;
+        progressFill.style.width = `${progress}%`;
+        document.getElementById('currentTime').textContent = formatTime(state.currentTime);
+    }
+
+    // Back Button
+    document.getElementById('backBtn').addEventListener('click', () => {
+        if (confirm('هل تريد العودة؟ سيتم فقدان أي تغييرات غير محفوظة.')) {
+            window.history.back();
+        }
+    });
+
+    // Play Button
+    document.getElementById('playBtn').addEventListener('click', () => {
+        state.isPlaying = !state.isPlaying;
+        const playIcon = document.getElementById('playIcon');
+        const playBtn = document.getElementById('playBtn');
+        
+        if (state.isPlaying) {
+            playIcon.textContent = 'pause';
+            playBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+            playBtn.classList.remove('bg-primary/90', 'hover:bg-primary');
+            showToast('بدء التشغيل...');
+            
+            // Simulate video playback
+            const playbackInterval = setInterval(() => {
+                if (state.currentTime < state.totalTime && state.isPlaying) {
+                    state.currentTime += 0.1;
+                    updateProgressBar();
+                } else {
+                    state.isPlaying = false;
+                    state.currentTime = 0;
+                    playIcon.textContent = 'play_arrow';
+                    playBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                    playBtn.classList.add('bg-primary/90', 'hover:bg-primary');
+                    updateProgressBar();
+                    clearInterval(playbackInterval);
+                }
+            }, 100);
+        } else {
+            playIcon.textContent = 'play_arrow';
+            playBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+            playBtn.classList.add('bg-primary/90', 'hover:bg-primary');
+            showToast('إيقاف التشغيل');
+        }
+    });
+
+    // Progress Bar Click
+    document.getElementById('progressBar').addEventListener('click', (e) => {
+        const bar = e.currentTarget;
+        const rect = bar.getBoundingClientRect();
+        const percent = (e.clientX - rect.left) / rect.width;
+        state.currentTime = percent * state.totalTime;
+        updateProgressBar();
+    });
+
+    // Resolution Toggle
+    document.querySelectorAll('input[name="res-toggle"]').forEach(input => {
+        input.addEventListener('change', (e) => {
+            state.currentResolution = e.target.value;
+            const label = e.target.getAttribute('data-label');
+            document.getElementById('resolutionBadge').textContent = label;
+            showToast(`تم تغيير الدقة إلى ${label}`);
+        });
+    });
+
+    // Quick Edit Buttons
+    document.querySelectorAll('.quick-edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const feature = btn.getAttribute('data-feature');
+            const featureNames = {
+                'titles': 'النصوص',
+                'audio': 'الصوت',
+                'style': 'الأسلوب',
+                'format': 'الصيغة'
+            };
+            showToast(`جاري فتح محرر ${featureNames[feature]}...`);
+        });
+    });
+
+    // Export Button
+    document.getElementById('exportBtn').addEventListener('click', async () => {
+        if (state.isExporting) return;
+        
+        state.isExporting = true;
+        const exportBtn = document.getElementById('exportBtn');
+        const exportIcon = document.getElementById('exportIcon');
+        const exportText = document.getElementById('exportText');
+        
+        exportBtn.disabled = true;
+        exportIcon.classList.add('spinner');
+        exportText.textContent = 'جاري التصدير...';
+        
+        showToast('بدء عملية التصدير...');
+        
+        // Simulate export process
+        try {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            exportIcon.classList.remove('spinner');
+            exportIcon.textContent = 'check_circle';
+            exportText.textContent = 'تم التصدير بنجاح!';
+            showToast('تم تصدير الفيديو بنجاح!');
+            
+            setTimeout(() => {
+                state.isExporting = false;
+                exportBtn.disabled = false;
+                exportIcon.textContent = 'download';
+                exportText.textContent = 'تصدير 4K (بدون علامة)';
+            }, 2000);
+        } catch (error) {
+            showToast('حدث خطأ أثناء التصدير');
+            state.isExporting = false;
+            exportBtn.disabled = false;
+            exportIcon.classList.remove('spinner');
+            exportIcon.textContent = 'download';
+            exportText.textContent = 'تصدير 4K (بدون علامة)';
+        }
+    });
+
+    // Share Buttons
+    document.getElementById('sharePlaystore').addEventListener('click', () => {
+        showToast('مشاركة مع متجر التطبيقات');
+    });
+
+    document.getElementById('shareNative').addEventListener('click', () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'مراجعة الفيديو',
+                text: 'شاهد فيديوي المحرر!',
+                url: window.location.href
+            }).catch(err => console.log('خطأ في المشاركة:', err));
+        } else {
+            showToast('المشاركة غير مدعومة في متصفحك');
+        }
+    });
+
+    document.getElementById('shareFilter').addEventListener('click', () => {
+        showToast('تطبيق فلتر على الفيديو...');
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+        if (e.code === 'Space') {
+            e.preventDefault();
+            document.getElementById('playBtn').click();
+        }
+        if (e.code === 'ArrowRight') {
+            state.currentTime = Math.min(state.currentTime + 1, state.totalTime);
+            updateProgressBar();
+        }
+        if (e.code === 'ArrowLeft') {
+            state.currentTime = Math.max(state.currentTime - 1, 0);
+            updateProgressBar();
+        }
+        if (e.code === 'KeyE') {
+            document.getElementById('exportBtn').click();
+        }
+    });
+
+    // Initialize
+    updateProgressBar();
+</script>
+</body>
+</html>
